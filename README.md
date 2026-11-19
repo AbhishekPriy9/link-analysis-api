@@ -6,11 +6,11 @@ it: competitors, search queries, SEO fixes, services and target audience.
 FastAPI and Gemini 3.5 Flash-Lite. The model response is constrained by a JSON schema, so every
 successful request returns the same shape.
 
+**Live demo:** https://link-analysis-api.vercel.app
+**API docs:** https://link-analysis-api.vercel.app/docs
 **Local API:** http://localhost:4000/link-analysis
-**Docs:** http://localhost:4000/docs
 
-The repo includes a `Dockerfile` and `render.yaml`; the deployment section below has the
-two-step Render setup if a hosted demo is needed.
+Deployed on Vercel's Hobby plan. The repo also includes a `Dockerfile` and `render.yaml`.
 
 ## Run locally
 
@@ -252,11 +252,24 @@ Sources:
 - JavaScript-heavy sites that render on the client return little usable text.
 - The SSRF check resolves the host before each request and redirect, and the validated IP is
   pinned into the connection. Redirects are revalidated before they are followed.
-- The cache is per process. A restart clears it.
+- The cache is per process. On Vercel, each function instance has its own cache, so a request
+  served by a different instance is a cache miss.
 
-## Deploy on Render
+## Deployment
 
-The repo contains `render.yaml` and a `Dockerfile`.
+The live demo runs on Vercel's Hobby plan. Vercel detects the FastAPI app at `app/main.py` and
+installs the dependencies declared in `pyproject.toml`.
+
+To deploy your own copy:
+
+1. Import the repository at https://vercel.com/new.
+2. Keep the detected FastAPI preset and root directory.
+3. Add `GEMINI_API_KEY` under **Project Settings → Environment Variables**.
+4. Deploy.
+
+The Hobby plan allows up to 300 s per function call, well above the measured 8-11 s analysis.
+
+The repo also contains `render.yaml` and a `Dockerfile` for Render:
 
 [Create a Render Blueprint from this repo](https://render.com/deploy?repo=https://github.com/AbhishekPriy9/link-analysis-api)
 
@@ -265,8 +278,8 @@ The repo contains `render.yaml` and a `Dockerfile`.
 3. The service builds the image and serves `/link-analysis` and `/docs` on its
    `onrender.com` URL.
 
-The free plan sleeps after a period without traffic, so the first request after a pause can
-take up to a minute to wake.
+The Render free plan sleeps after a period without traffic, so the first request after a pause
+can take up to a minute to wake.
 
 ## Layout
 
