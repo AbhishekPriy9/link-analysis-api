@@ -57,7 +57,14 @@ curl -X POST http://localhost:4000/link-analysis \
 
 The full response from the measured run on 19 November 2026 is in
 [`examples/laravel-response.json`](examples/laravel-response.json). It is abridged below, with
-one query and one service shown to keep this page readable:
+one query and one service shown to keep this page readable.
+
+The first HTTP call took 11.3 s; the same URL served from cache took 4 ms:
+
+```text
+INFO: 127.0.0.1:48658 - "POST /link-analysis HTTP/1.1" 200 OK
+INFO: 127.0.0.1:57604 - "POST /link-analysis HTTP/1.1" 200 OK
+```
 
 ```json
 {
@@ -250,6 +257,8 @@ Sources:
 ## Deploy on Render
 
 The repo contains `render.yaml` and a `Dockerfile`.
+
+[Create a Render Blueprint from this repo](https://render.com/deploy?repo=https://github.com/AbhishekPriy9/link-analysis-api)
 
 1. In the Render dashboard choose **New → Blueprint** and connect this repository.
 2. Apply the blueprint. When Render asks for `GEMINI_API_KEY`, paste the key.
